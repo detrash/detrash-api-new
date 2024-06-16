@@ -1,22 +1,22 @@
-import { env } from "@/env";
-import * as schema from "./schema";
-import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
-import { pgEnum } from "drizzle-orm/pg-core";
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Client } from 'pg';
 
-import { Client } from "pg";
+import { env } from '@/env';
+
+import * as schema from './schema';
 
 declare global {
-  // eslint-disable-next-line no-var -- only var works here
+  // eslint-disable-next-line unused-imports/no-unused-vars
   var db: NodePgDatabase<typeof schema> | undefined;
 }
 
 const client = new Client({
-  connectionString: "postgres://user:password@host:port/db",
+  connectionString: env.DATABASE_URL,
 });
 
 let db: NodePgDatabase<typeof schema>;
 
-if (env.NODE_ENV === "production") {
+if (env.NODE_ENV === 'production') {
   db = drizzle(client, { schema });
 } else {
   if (!global.db) {
@@ -26,4 +26,4 @@ if (env.NODE_ENV === "production") {
 }
 
 export { db };
-export * from "./schema";
+export * from './schema';
