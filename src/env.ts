@@ -3,12 +3,14 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
+    POSTGRES_DB_URL: z.string().url(),
     NODE_ENV: z.string().optional(),
+    DRIZZLE_ENABLE_LOG: z.boolean().optional(),
   },
   client: {},
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    DATABASE_URL: process.env.POSTGRES_DB_URL,
+    POSTGRES_DB_URL: process.env.POSTGRES_DB_URL,
+    DRIZZLE_ENABLE_LOG: process.env.DRIZZLE_ENABLE_LOG === 'true',
   },
 });

@@ -11,7 +11,7 @@ declare global {
 }
 
 const client = new Client({
-  connectionString: env.DATABASE_URL,
+  connectionString: env.POSTGRES_DB_URL,
 });
 
 let db: NodePgDatabase<typeof schema>;
@@ -20,7 +20,7 @@ if (env.NODE_ENV === 'production') {
   db = drizzle(client, { schema });
 } else {
   if (!global.db) {
-    global.db = drizzle(client, { schema });
+    global.db = drizzle(client, { schema, logger: true });
   }
   db = global.db;
 }
