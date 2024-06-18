@@ -1,5 +1,5 @@
 module.exports = {
-  plugins: ['simple-import-sort', 'unused-imports'],
+  plugins: ['drizzle', 'simple-import-sort', 'unused-imports'],
   extends: ['next/core-web-vitals', 'prettier'],
   rules: {
     '@typescript-eslint/no-unused-vars': 'off',
