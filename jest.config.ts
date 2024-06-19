@@ -7,6 +7,8 @@ const createJestConfig = nextJest({
 
 const jestConfig: Config = {
   testEnvironment: 'node',
+  globalSetup: '<rootDir>/jest/setup.js',
+  globalTeardown: '<rootDir>/jest/teardown.js',
 };
 
 export default createJestConfig(jestConfig);
