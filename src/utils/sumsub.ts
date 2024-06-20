@@ -1,7 +1,7 @@
 import { InternalAxiosRequestConfig } from 'axios';
 import * as CryptoJS from 'crypto-js';
 import FormData from 'form-data';
-import { NextApiRequest } from 'next';
+import { NextRequest } from 'next/server';
 
 import { ApplicantReviewedResponse } from '@/actions/sumsub';
 import { KYC, SafeKYC } from '@/db';
@@ -31,8 +31,8 @@ export function createSignature(config: InternalAxiosRequestConfig) {
   return config;
 }
 
-export async function checkDigest(req: NextApiRequest): Promise<boolean> {
-  if (typeof req.headers['X-Payload-Digest-Alg'] !== 'string') {
+export async function checkDigest(req: NextRequest): Promise<boolean> {
+  if (!req.headers.get('X-Payload-Digest-Alg')) {
     throw new Error('Missing digest algorithm');
   }
 
@@ -40,16 +40,16 @@ export async function checkDigest(req: NextApiRequest): Promise<boolean> {
     HMAC_SHA1_HEX: 'sha1',
     HMAC_SHA256_HEX: 'sha256',
     HMAC_SHA512_HEX: 'sha512',
-  }[req.headers['X-Payload-Digest-Alg']];
+  }[req.headers.get('X-Payload-Digest-Alg')!];
   if (!algo) {
     throw new Error('Unsupported algorithm');
   }
 
-  const body = await req.body();
+  const body = await req.json();
   const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, env.SUMSUB_SECRET_KEY);
   const calculatedDigest = hmac.update(body).finalize().toString(CryptoJS.enc.Hex);
 
-  return calculatedDigest === req.headers['x-payload-digest'];
+  return calculatedDigest === req.headers.get('x-payload-digest');
 }
 
 /**

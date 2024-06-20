@@ -1,16 +1,16 @@
-import { NextApiRequest } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 
 import { addKYC } from '@/actions';
 import { castWebhook2KYC, checkDigest } from '@/utils';
 
-export async function POST(req: NextApiRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const result = await checkDigest(req);
 
   if (!result) {
-    return Response.json({ status: 'Error' }, { status: 401 });
+    return NextResponse.json({ status: 'Error' }, { status: 401 });
   }
 
-  const body = await req.body();
+  const body = await req.json();
 
   switch (body.type) {
     case 'applicantReviewed':
@@ -18,8 +18,8 @@ export async function POST(req: NextApiRequest) {
       break;
     default:
       console.log(`Unknown webhook type: ${body.type}`);
-      return Response.json({ status: 'Error' }, { status: 400 });
+      return NextResponse.json({ status: 'Error' }, { status: 400 });
   }
 
-  return Response.json({ status: 'Ok' });
+  return NextResponse.json({ status: 'Ok' });
 }
