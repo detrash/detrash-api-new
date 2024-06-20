@@ -1,4 +1,6 @@
-export const applicantReviewedFinalRejection = {
+import { type ApplicantReviewedResponse } from '@/actions/sumsub';
+
+export const applicantReviewedFinalRejection: ApplicantReviewedResponse = {
   applicantId: '5cb744200a975a67ed1798a4',
   inspectionId: '5cb744200a975a67ed1798a5',
   correlationId: 'req-fa94263f-0b23-42d7-9393-ab10b28ef42d',
@@ -17,7 +19,7 @@ export const applicantReviewedFinalRejection = {
   createdAtMs: '2020-02-21 13:23:19.001',
 };
 
-export const applicantReviewedSuccess = {
+export const applicantReviewedSuccess: ApplicantReviewedResponse = {
   applicantId: '5cb56e8e0a975a35f333cb83',
   inspectionId: '5cb56e8e0a975a35f333cb84',
   correlationId: 'req-a260b669-4f14-4bb5-a4c5-ac0218acb9a4',

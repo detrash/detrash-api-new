@@ -1,7 +1,14 @@
-import { createTodo } from '@/actions/sumsub';
+import { addKYC } from '@/actions/sumsub';
+import { castWebhook2KYC } from '@/utils';
 
-describe('sumbsub', () => {
-  it('should return the sum of two numbers', async () => {
-    await createTodo({ text: 'hello', isCompleted: true });
-  }, 60000);
+import { applicantReviewedFinalRejection, applicantReviewedSuccess } from './sumsub.mock';
+
+describe('Sumsub', () => {
+  it('should store failed result', async () => {
+    await addKYC(castWebhook2KYC(applicantReviewedFinalRejection));
+  });
+
+  it('should store passed result', async () => {
+    await addKYC(castWebhook2KYC(applicantReviewedSuccess));
+  });
 });

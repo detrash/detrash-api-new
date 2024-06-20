@@ -1,39 +1,92 @@
 {
-  "id": "24bfbd9c-5aba-438c-bc61-5ea03401af49",
+  "id": "15e0986c-e2c8-47ad-8cd9-d106cf225006",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.todo": {
-      "name": "todo",
+    "public.kycs": {
+      "name": "kycs",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
+        "inspectionId": {
+          "name": "inspectionId",
+          "type": "varchar",
           "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "notNull": true
         },
-        "text": {
-          "name": "text",
+        "applicantId": {
+          "name": "applicantId",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "isCompleted": {
-          "name": "isCompleted",
-          "type": "boolean",
+        "correlationId": {
+          "name": "correlationId",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": true,
-          "default": false
+          "notNull": true
         },
-        "createdAt": {
-          "name": "createdAt",
-          "type": "time",
+        "externalUserId": {
+          "name": "externalUserId",
+          "type": "varchar",
           "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
+          "notNull": true
+        },
+        "levelName": {
+          "name": "levelName",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reviewStatus": {
+          "name": "reviewStatus",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "moderationComment": {
+          "name": "moderationComment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "clientComment": {
+          "name": "clientComment",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewAnswer": {
+          "name": "reviewAnswer",
+          "type": "enum_reviewAnswer",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rejectLabels": {
+          "name": "rejectLabels",
+          "type": "varchar[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewRejectType": {
+          "name": "reviewRejectType",
+          "type": "enum_reviewStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "createdAtMs": {
+          "name": "createdAtMs",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
@@ -42,7 +95,24 @@
       "uniqueConstraints": {}
     }
   },
-  "enums": {},
+  "enums": {
+    "public.enum_reviewAnswer": {
+      "name": "enum_reviewAnswer",
+      "schema": "public",
+      "values": [
+        "RED",
+        "GREEN"
+      ]
+    },
+    "public.enum_reviewStatus": {
+      "name": "enum_reviewStatus",
+      "schema": "public",
+      "values": [
+        "FINAL",
+        "RETRY"
+      ]
+    }
+  },
   "schemas": {},
   "_meta": {
     "columns": {},
