@@ -1,0 +1,40 @@
+name: detrash-api-ci
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [20.x]
+    env:
+      SUMSUB_ACCESS_TOKEN: 'SUMSUB_ACCESS_TOKEN'
+      SUMSUB_SECRET_KEY: 'SUMSUB_SECRET_KEY'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 #v4.1.7
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 #v4.0.2
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn install --frozen-lockfile
+
+      - name: Check Lint
+        run: yarn lint
+
+      - name: Check format
+        run: yarn format
+
+      - name: Unit Test
+        run: yarn test
