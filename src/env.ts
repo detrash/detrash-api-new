@@ -9,6 +9,11 @@ export const env = createEnv({
     // Sumsub
     SUMSUB_ACCESS_TOKEN: z.string(),
     SUMSUB_SECRET_KEY: z.string(),
+    // Auth0
+    AUTH0_BASE_URL: z.string(),
+    AUTH0_ISSUER_DOMAIN: z.string(),
+    AUTH0_CLIENT_SECRET: z.string(),
+    AUTH0_CLIENT_ID: z.string(),
   },
   client: {},
   runtimeEnv: {
@@ -18,5 +23,9 @@ export const env = createEnv({
     // Sumsub
     SUMSUB_ACCESS_TOKEN: process.env.SUMSUB_ACCESS_TOKEN,
     SUMSUB_SECRET_KEY: process.env.SUMSUB_SECRET_KEY,
+    AUTH0_BASE_URL: process.env.AUTH0_BASE_URL,
+    AUTH0_ISSUER_DOMAIN: process.env.AUTH0_ISSUER_DOMAIN,
+    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
+    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
   },
 });
