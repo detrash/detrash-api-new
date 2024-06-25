@@ -25,9 +25,9 @@ export async function getSDKAccessToken({
   levelName?: string;
   ttlInSecs?: number;
 }): Promise<string> {
-  const response = await api.post<{ token: string }>(
-    `/resources/accessTokens?userId=${userId}&levelName=${levelName}&ttlInSecs=${ttlInSecs}`,
-  );
+  const response = await api.post<{ token: string }>(`/resources/accessTokens`, undefined, {
+    params: { userId, levelName, ttlInSecs },
+  });
   return response.data.token;
 }
 
