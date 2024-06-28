@@ -48,6 +48,26 @@ export async function getKYCByUserId(userId: string): Promise<SafeKYC> {
   return kyc;
 }
 
+export async function getSignature({
+  secretKey,
+  digestAlg,
+  content,
+}: {
+  secretKey: string;
+  digestAlg: string;
+  content: any;
+}) {
+  const { data } = await api.post<{ digest: string; digestAlg: string }>(
+    `/resources/inspectionCallbacks/testDigest`,
+    content,
+    {
+      params: { secretKey, digestAlg },
+    },
+  );
+
+  return data;
+}
+
 export interface SumsubWebhookResponse<T = string> {
   applicantId: string;
   inspectionId: string;
