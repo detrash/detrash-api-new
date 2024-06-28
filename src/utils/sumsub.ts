@@ -40,24 +40,36 @@ export async function checkDigest(
   req: NextRequest,
   secret = env.SUMSUB_SECRET_KEY,
 ): Promise<boolean> {
-  if (!req.headers.get('X-Payload-Digest-Alg')) {
+  const secretKey = req.headers.get('SUMSUB_SECRET_KEY');
+
+  // For now check API request secret key in the header
+  if (secretKey === secret) {
+    return true;
+  }
+
+  const algo = req.headers.get('X-Payload-Digest-Alg');
+  if (!algo) {
     throw new Error('Missing digest algorithm');
   }
 
-  const algo = {
+  const hasher = {
     HMAC_SHA1_HEX: CryptoJS.algo.SHA1,
     HMAC_SHA256_HEX: CryptoJS.algo.SHA256,
     HMAC_SHA512_HEX: CryptoJS.algo.SHA512,
-  }[req.headers.get('X-Payload-Digest-Alg')!];
-  if (!algo) {
+  }[algo!];
+
+  if (!hasher) {
     throw new Error('Unsupported algorithm');
   }
 
+  const digest = req.headers.get('x-payload-digest');
   const body = await req.json();
-  const hmac = CryptoJS.algo.HMAC.create(algo, secret);
+  const hmac = CryptoJS.algo.HMAC.create(hasher, secret);
+
   const calculatedDigest = hmac.update(JSON.stringify(body)).finalize().toString(CryptoJS.enc.Hex);
 
-  const digest = req.headers.get('x-payload-digest');
+  console.log({ calculatedDigest, digest, secret, algo, body: JSON.stringify(body) });
+
   return calculatedDigest === digest;
 }
 
