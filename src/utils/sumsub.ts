@@ -55,6 +55,10 @@ export async function checkDigest(
 
   const body = await req.json();
   const hmac = CryptoJS.algo.HMAC.create(algo, secret);
+
+  console.log(req.headers.get('X-Payload-Digest-Alg'));
+  console.log(body);
+
   const calculatedDigest = hmac.update(body).finalize().toString(CryptoJS.enc.Hex);
 
   const digest = req.headers.get('x-payload-digest');
