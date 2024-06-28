@@ -58,6 +58,7 @@ export async function checkDigest(
 
   console.log(req.headers.get('X-Payload-Digest-Alg'));
   console.log(body);
+  console.log(req.headers.get('x-payload-digest'));
 
   const calculatedDigest = hmac.update(body).finalize().toString(CryptoJS.enc.Hex);
 
