@@ -8,7 +8,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const result = await checkDigest(req);
 
   if (!result) {
-    return NextResponse.json({ status: 'Error' }, { status: 401 });
+    return NextResponse.json({ status: 'Signature mismatched' }, { status: 401 });
   }
 
   const body = await req.json();

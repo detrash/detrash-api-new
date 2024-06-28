@@ -28,7 +28,7 @@ export function createSignature(config: InternalAxiosRequestConfig) {
   if (config.data instanceof FormData) {
     hmac.update(toWordArray(config.data.getBuffer()));
   } else if (config.data) {
-    hmac.update(config.data);
+    hmac.update(JSON.stringify(config.data));
   }
 
   config.headers['X-App-Access-Ts'] = ts;
@@ -36,25 +36,29 @@ export function createSignature(config: InternalAxiosRequestConfig) {
   return config;
 }
 
-export async function checkDigest(req: NextRequest): Promise<boolean> {
+export async function checkDigest(
+  req: NextRequest,
+  secret = env.SUMSUB_SECRET_KEY,
+): Promise<boolean> {
   if (!req.headers.get('X-Payload-Digest-Alg')) {
     throw new Error('Missing digest algorithm');
   }
 
   const algo = {
-    HMAC_SHA1_HEX: 'sha1',
-    HMAC_SHA256_HEX: 'sha256',
-    HMAC_SHA512_HEX: 'sha512',
+    HMAC_SHA1_HEX: CryptoJS.algo.SHA1,
+    HMAC_SHA256_HEX: CryptoJS.algo.SHA256,
+    HMAC_SHA512_HEX: CryptoJS.algo.SHA512,
   }[req.headers.get('X-Payload-Digest-Alg')!];
   if (!algo) {
     throw new Error('Unsupported algorithm');
   }
 
   const body = await req.json();
-  const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, env.SUMSUB_SECRET_KEY);
-  const calculatedDigest = hmac.update(body).finalize().toString(CryptoJS.enc.Hex);
+  const hmac = CryptoJS.algo.HMAC.create(algo, secret);
+  const calculatedDigest = hmac.update(JSON.stringify(body)).finalize().toString(CryptoJS.enc.Hex);
 
-  return calculatedDigest === req.headers.get('x-payload-digest');
+  const digest = req.headers.get('x-payload-digest');
+  return calculatedDigest === digest;
 }
 
 /**
