@@ -40,6 +40,13 @@ export async function checkDigest(
   req: NextRequest,
   secret = env.SUMSUB_SECRET_KEY,
 ): Promise<boolean> {
+  const secretKey = req.headers.get('SUMSUB_SECRET_KEY');
+
+  // For now check API request secret key in the header
+  if (secretKey === secret) {
+    return true;
+  }
+
   const algo = req.headers.get('X-Payload-Digest-Alg');
   if (!algo) {
     throw new Error('Missing digest algorithm');
