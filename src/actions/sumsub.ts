@@ -17,19 +17,17 @@ api.interceptors.request.use(createSignature, function (error) {
 });
 
 export async function getSDKAccessToken({
-  userId = 'anon',
+  userId,
   levelName = 'basic-kyc-level',
   ttlInSecs = 600,
-}:
-  | {
-      userId?: string;
-      levelName?: string;
-      ttlInSecs?: number;
-    }
-  | undefined = {}): Promise<string> {
-  const response = await api.post<{ token: string }>(
-    `/resources/accessTokens?userId=${userId}&levelName=${levelName}&ttlInSecs=${ttlInSecs}`,
-  );
+}: {
+  userId: string;
+  levelName?: string;
+  ttlInSecs?: number;
+}): Promise<string> {
+  const response = await api.post<{ token: string }>(`/resources/accessTokens`, undefined, {
+    params: { userId, levelName, ttlInSecs },
+  });
   return response.data.token;
 }
 

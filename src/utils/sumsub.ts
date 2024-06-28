@@ -20,6 +20,11 @@ export function createSignature(config: InternalAxiosRequestConfig) {
 
   const hmac = CryptoJS.algo.HMAC.create(CryptoJS.algo.SHA256, env.SUMSUB_SECRET_KEY);
   hmac.update(ts + config.method!.toUpperCase() + config.url);
+
+  if (config.params) {
+    hmac.update(`?${new URLSearchParams(config.params).toString()}`);
+  }
+
   if (config.data instanceof FormData) {
     hmac.update(toWordArray(config.data.getBuffer()));
   } else if (config.data) {

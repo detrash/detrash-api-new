@@ -1,11 +1,12 @@
+import { NextResponse } from 'next/server';
+
 import { getSDKAccessToken } from '@/actions/sumsub';
+import { withApiAuthRequired } from '@/auth0';
 
-export async function POST(request: Request) {
-  const _body = await request.json();
+const getAccessToken = withApiAuthRequired(async (req) => {
+  const token = await getSDKAccessToken({ userId: req.auth.email });
 
-  // TODO extract userId from Authorization header
+  return NextResponse.json({ token });
+});
 
-  const token = await getSDKAccessToken();
-
-  return Response.json({ token });
-}
+export { getAccessToken as POST };

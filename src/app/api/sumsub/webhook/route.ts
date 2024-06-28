@@ -4,6 +4,7 @@ import { addKYC } from '@/actions';
 import { castWebhook2KYC, checkDigest } from '@/utils';
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // Verify the request if it's coming from Sumsub
   const result = await checkDigest(req);
 
   if (!result) {
